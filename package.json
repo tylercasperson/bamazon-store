@@ -1,0 +1,22 @@
+{
+  "name": "bamazon-store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamazon.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tylercasperson/bamazon-store.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tylercasperson/bamazon-store/issues"
+  },
+  "homepage": "https://github.com/tylercasperson/bamazon-store#readme",
+  "dependencies": {
+    "table": "^5.4.6"
+  }
+}
