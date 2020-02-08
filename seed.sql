@@ -28,10 +28,22 @@ INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel
 VALUES ("Mario Kart", 1, 500.00, 1299.99, 80, 10, 100);
 
 INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel, maxLevel)
-VALUES ("BlueNecklace", 2, 2.00, 59.99, 10, 2, 10);
+VALUES ("Blue Necklace", 2, 2.00, 59.99, 10, 2, 10);
 
 INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel, maxLevel)
-VALUES ("CrystalBlueRing", 2, 1.00, 29.99, 50, 10, 30);
+VALUES ("Crystal Blue Ring", 2, 1.00, 29.99, 50, 10, 30);
+
+INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel, maxLevel)
+VALUES ("Crystal", 2, 1.00, 299.99, 5, 10, 40);
+
+INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel, maxLevel)
+VALUES ("Ruby Ring", 2, 0.10, 99.99, 0, 20, 30);
+
+INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel, maxLevel)
+VALUES ("Bead Necklace", 2, 0.50, 159.99, 3, 10, 30);
+
+INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel, maxLevel)
+VALUES ("Toe ring", 2, 2.00, 300.00, 2, 1, 3);
 
 
 USE bamazonDB;    
