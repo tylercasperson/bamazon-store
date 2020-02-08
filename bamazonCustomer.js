@@ -19,14 +19,7 @@ connection.connect(function(err) {
     }); 
     console.log("connected as id " + connection.threadId + "\n");
     welcome();
-    // readCustomer();
-    // readDepartments();
-    // readEmployees();
 });
-
-// console.log('What is the id of the product you would like to buy?');
-// console.log('How many units of ' + productName + ' would you like to buy?');
-
 
 function welcome(){
     console.log('__________________Welcome to bamazon!______________________________');
@@ -77,13 +70,6 @@ function specificProduct(thisOne){
     });
 }
 
-function inventoryCheck(qty){
-
-
-}
-
-
-
 function whichDepartment(){
     inquirer.prompt({
             name: "whichDepartment",
@@ -117,82 +103,22 @@ function whichDepartment(){
                             console.log(qty);
                             if (qty > res[0].quantityOnHand){
                                 console.log("I am sorry but we only have " + res[0].quantityOnHand + " in stock.")
+                                console.log("GET OUT!");
+                                connection.end();
+                            } else {
+                                var newQty = res[0].quantityOnHand - qty;
+                                
+                                connection.query("UPDATE products SET quantityOnHand =" + newQty + " WHERE productID=" + productResponse[Object.keys(productResponse)[0]] + ";", function(err, resUpdate) {
+                                    if (err) throw err;
+                                    console.log("");
+                                    console.log("Your order has been processed.");
+                                    console.log("Thank you for choosing bamazon!");
+                                    connection.end();
+                                })
                             }
-                            console.log('hello');
-
                         })
-
-
-
                     });
-
-
                     } //end of else
             });
         })
     };
-    
-    
-                        
-          
-
-
-
-
-// function whichProduct(){
-//     inquirer.prompt({
-//             name: "whichProduct",
-//             type: "input",
-//             message: "Which product would you like to purchase? Please select an id."
-//         })
-//         .then(function(productResponse){
-//             var departmentDecision = departmentResponse.whichDepartment;
-//             var productDecision = productResponse.whichProduct;
-//             connection.query("SELECT * FROM products INNER JOIN departments ON departments.departmentID = deptID AND deptID = ? AND productID = ?", departmentDecision, productDecision, function(err, res) {
-//                 if (err) throw err;
-//                 if(res.length === 0){
-//                     console.log('The selection is not valid. Please enter a product on the list.');
-//                     whichProduct();
-//                 } else {
-//                     console.log('hello');
-//                     // var data = [
-//                     //     ['id', 'ProductName', 'Price']
-//                     // ]
-//                     // for(var i =0; i<res.length;i++){        
-//                     //     data.push([res[i].productID, res[i].productName, res[i].price],);            
-//                     // }        
-//                     // console.log(table(data));
-//                     // connection.end();
-//                 }
-//             });
-//         });
-// };
-
-
-
-
-
-function readCustomer(){
-    connection.query("SELECT * FROM products INNER JOIN departments ON departments.departmentID = deptid AND deptID = ?", function(err, res) {
-        if (err) throw err;    
-        
-        var data = [
-            ['id', 'ProductName', 'Price']
-        ]
-        for(var i =0; i<res.length;i++){        
-            data.push([res[i].productID, res[i].productName, res[i].price],);            
-        }        
-        console.log(table(data));
-        connection.end();
-    });
-}
-
-
-function readEmployees(){
-    console.log('Selecting all Employees...\n');
-    connection.query("SELECT * FROM employees", function(err, res) {
-        if (err) throw err;
-        console.log(res);
-        connection.end();
-    });
-}
