@@ -1,8 +1,7 @@
 require ("dotenv").config();
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-// var table = require("table");
-const table = require('table').table
+var table = require('table').table
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -37,10 +36,10 @@ function readDepartments(){
         ]
         for(var i =0; i<res.length;i++){        
             data.push([res[i].departmentID, res[i].departmentName],);
-        }        
+        }  
+        console.log();      
         console.log(table(data));
         whichDepartment();
-        // connection.end();
     });
 }
 
@@ -48,12 +47,23 @@ function readProduct(department){
     connection.query("SELECT * FROM products INNER JOIN departments ON departments.departmentID = deptID AND deptID = ?", department, function(err, res) {
         if(err) throw err;
         var data = [
-            ['id', 'ProductName', 'Price']
-        ]
-        for(var i =0; i<res.length;i++){        
-            data.push([res[i].productID, res[i].productName, res[i].price],);            
-        }        
-        console.log(table(data));
+            ['id', 'ProductName', 'Quantity', 'Price']
+        ];
+        var config = {
+            columns: {
+                0: {
+                    alignment: 'center'
+                },
+                2: {
+                    alignment: 'center'
+                },
+            }
+        };
+        for(var i =0; i<res.length;i++){   
+            data.push([res[i].productID, res[i].productName, res[i].quantityOnHand, '$' + res[i].price]);
+        }
+        console.log();        
+        console.log(table(data, config));
     });
 }
 
@@ -61,12 +71,23 @@ function specificProduct(thisOne){
     connection.query("SELECT * FROM products WHERE productID =" + thisOne[Object.keys(thisOne)[0]], function(err, res) {
         if(err) throw err;
         var data = [
-            ['id', 'ProductName', 'Price']
-        ]
+            ['id', 'ProductName','Quantity', 'Price']
+        ];
+        var config = {
+            columns: {
+                0: {
+                    alignment: 'center'
+                },
+                2: {
+                    alignment: 'center'
+                },
+            }
+        };
         for(var i =0; i<res.length;i++){        
-            data.push([res[i].productID, res[i].productName, res[i].price]);            
-        }        
-        console.log(table(data));
+            data.push([res[i].productID, res[i].productName, res[i].quantityOnHand, res[i].price]);            
+        }    
+        console.log();    
+        console.log(table(data, config));
     });
 }
 
