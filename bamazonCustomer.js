@@ -12,7 +12,6 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
-    console.log('1');
     process.on('uncaughtException', function (err) {
         console.log(err);
     }); 
@@ -23,9 +22,8 @@ connection.connect(function(err) {
 function welcome(){
     console.log('__________________Welcome to bamazon!______________________________');
     console.log();
-    // console.log('Which department would you like to see products in? Enter the id.');
     readDepartments();
-}
+};
 
 function readDepartments(){
     connection.query("SELECT * FROM departments", function(err, res) {
@@ -41,7 +39,7 @@ function readDepartments(){
         console.log(table(data));
         whichDepartment();
     });
-}
+};
 
 function readProduct(department){
     connection.query("SELECT * FROM products INNER JOIN departments ON departments.departmentID = deptID AND deptID = ?", department, function(err, res) {
@@ -65,7 +63,7 @@ function readProduct(department){
         console.log();        
         console.log(table(data, config));
     });
-}
+};
 
 function specificProduct(thisOne){
     connection.query("SELECT * FROM products WHERE productID =" + thisOne[Object.keys(thisOne)[0]], function(err, res) {
@@ -89,7 +87,7 @@ function specificProduct(thisOne){
         console.log();    
         console.log(table(data, config));
     });
-}
+};
 
 function whichDepartment(){
     inquirer.prompt({

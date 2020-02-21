@@ -86,3 +86,23 @@ VALUES ("Electronics", 1, 500.50);
 
 INSERT INTO departments (departmentName, managerID, overhead_cost)
 VALUES ("Jewlery", 4, 200.34);
+
+USE bamazonDB;
+CREATE TABLE options (
+    optionID int NOT NULL AUTO_INCREMENT,
+    menuOption VARCHAR(100) NOT NULL,
+    lockID int,
+    PRIMARY KEY (optionID)
+);
+
+INSERT INTO options (menuOption, lockID)
+VALUES ("View Products for Sale", 1);
+
+INSERT INTO options (menuOption, lockID)
+VALUES ("View Low Inventory", 1);
+
+INSERT INTO options (menuOption, lockID)
+VALUES ("Add to Inventory", 1);
+
+INSERT INTO options (menuOption, lockID)
+VALUES ("Add New Product", 1);
