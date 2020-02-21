@@ -97,7 +97,7 @@ function whichDepartment(){
         })
         .then(function(departmentResponse){
             var departmentDecision = departmentResponse.whichDepartment;
-            connection.query("SELECT * FROM products INNER JOIN departments ON departments.departmentID = deptID AND deptID = ?", departmentDecision, function(err, res) {
+            connection.query("SELECT * FROM products INNER JOIN departments ON departments.departmentID = deptID WHERE deptID = ?", departmentDecision, function(err, res) {
                 if (err) throw err;
             
                 if(res.length === 0){
