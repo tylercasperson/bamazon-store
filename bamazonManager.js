@@ -72,7 +72,7 @@ function allProducts(){
         console.log(output);
         goToStart();
     })
-}
+};
 
 function lowInventory(){
     connection.query("SELECT * FROM products WHERE quantityOnHand <= minLevel", function(err, res) {
@@ -86,9 +86,9 @@ function lowInventory(){
         }
         console.log();
         console.log(table(data));
-        //need a function
+        goToStart();
     })
-}
+};
 
 function addInventory(){
     var newQty = res[0].quantityOnHand + qty;                   
@@ -114,8 +114,6 @@ function addProduct(){
         })
     })
 };
-
-
 
 function whichOption(){
     inquirer.prompt({
