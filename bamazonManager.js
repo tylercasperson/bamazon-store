@@ -157,17 +157,94 @@ function specificProduct(thisProduct){
 };
 
 function addProduct(){
+    var answers = [];
+
     inquirer.prompt({
-        name: "productName",
+        name: "departmentName",
         type: "input",
-        message: "What is the name of the product?"
+        message: "What department does the new product belong in?"
     })
-    .then(function(name){
+    .then(function(answer1){
         inquirer.prompt({
-            name: "cost",
+            name: "productName",
             type: "input",
-            message: "What is the cost of the new product?"
+            message: "What is the name of the product?"
         })
+        .then(function(answer2){
+            inquirer.prompt({
+                name: "cost",
+                type: "input",
+                message: "What is the cost of the new product?"
+            })
+            .then(function(answer3){
+                inquirer.prompt({
+                    name: "price",
+                    type: "input",
+                    message: "What is the price of the new product?"
+                })
+                .then(function(answer4){
+                    inquirer.prompt({
+                        name: "quantity",
+                        type: "input",
+                        message: "What quantity should be received of the new product?"
+                    })
+                    .then(function(answer5){
+                        inquirer.prompt({
+                            name: "minLevel",
+                            type: "input",
+                            message: "What is the minimum inventory level for the new product?"
+                        })
+                        .then(function(answer6){
+                            inquirer.prompt({
+                                name: "maxLevel",
+                                type: "input",
+                                message: "What is the maximum inventory level for the new product?"
+                            })
+                            .then(function(answer7){
+                                answers.push(Number(answer1.departmentName));
+                                answers.push("'"+answer2.productName+"'");
+                                answers.push(answer3.cost);
+                                answers.push(answer4.price);
+                                answers.push(answer5.quantity);
+                                answers.push(answer6.minLevel);
+                                answers.push(answer7.maxLevel);
+                                connection.query("INSERT INTO products (productName, deptID, cost, price, quantityOnHand, minLevel, maxLevel) VALUES ("+answers[1]+", "+answers[0]+", "+answers[2]+", "+answers[3]+", "+answers[4]+", "+answers[5]+", "+answers[6]+"); ", function(err, resInsert) {
+                                    if (err) throw err;
+                                })
+
+                                connection.query("SELECT * FROM products INNER JOIN departments ON departmentID = deptID WHERE productID=(SELECT MAX(productID) FROM products);", function(err, res) {
+                                    if(err) throw err;
+                                    var data = [
+                                        ['id', 'Department', 'Product', 'Cost', 'Price', 'Quantity', 'MinLevel', 'MaxLevel']
+                                    ];
+                                    for(var i =0; i<res.length;i++){        
+                                        data.push([res[i].productID, res[i].departmentName, res[i].productName, res[i].cost, res[i].price, res[i].quantityOnHand, res[i].minLevel, res[i].maxLevel]);            
+                                    }    
+                                    console.log();    
+                                    console.log(table(data));
+                                    goToStart();
+                                })
+                            })
+                        })
+                    })
+                })
+            })
+        })  
+    })
+};
+
+function showDepartments(){
+    connection.query("SELECT * FROM departments",function(err, res){
+        if(err) throw err;
+        var data = [
+            ['id', 'Deparment']
+        ];
+        for(var i =0; i<res.length;i++){        
+            data.push([res[i].departmentID, res[i].departmentName]);            
+        }    
+        console.log();    
+        console.log(table(data));
+        addProduct();
     })
 };
 
@@ -185,33 +262,13 @@ function whichOption(){
             break;
             case '2':
                 lowInventory();
-                console.log("2");
             break;
             case '3':
                 addInventory();
-                console.log("3");
             break;
             case '4':
-                addProduct();
-                console.log("4");
+                showDepartments();
             break;
         };
     })
 };
-
-
-// inquirer.prompt({
-//     name: "whichDepartment",
-//     type: "input",
-//     message: "Which department would you like to see products in? Please select an id."
-// })
-// .then(function(departmentResponse){
-//     var departmentDecision = departmentResponse.whichDepartment;
-//     connection.query("SELECT * FROM products INNER JOIN departments ON departments.departmentID = deptID AND deptID = ?", departmentDecision, function(err, res) {
-//         if (err) throw err;
-    
-//         if(res.length === 0){
-//             console.log('The selection is not valid. Please enter a department on the list.');
-//             whichDepartment();
-//         } else {
-//             readProduct(departmentDecision);
