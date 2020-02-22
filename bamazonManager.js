@@ -91,13 +91,69 @@ function lowInventory(){
 };
 
 function addInventory(){
-    var newQty = res[0].quantityOnHand + qty;                   
-    connection.query("UPDATE products SET quantityOnHand =" + newQty + " WHERE productID=" + productResponse[Object.keys(productResponse)[0]] + ";", function(err, resUpdate) {
+    connection.query("SELECT * FROM products INNER JOIN departments on departmentID = deptID", function(err, res){
         if (err) throw err;
+        var data = [
+            ['id', 'Department', 'Product', 'Cost', 'Price', 'Quantity', 'MinLevel', 'MaxLevel']
+        ];
+        for(var i=0; i<res.length;i++){
+            data.push([res[i].productID, res[i].departmentName, res[i].productName, "$" + res[i].cost, "$" + res[i].price, res[i].quantityOnHand, res[i].minLevel, res[i].maxLevel]);
+        }
         console.log();
-        console.log(res[0].productName + " has been updated.");
-        //function to show update inventory
+        var output = table(data);
+        console.log(output);
+    
+        inquirer.prompt({
+            name: "specificProduct",
+            type: "input",
+            message: "What item would you like to add to inventory? Please select the id."
+        })
+        .then(function(thisOne){
+            specificProduct(thisOne);
+        })
     })
+};
+        
+function specificProduct(thisProduct){
+    var thisOne = thisProduct[Object.keys(thisProduct)[0]];
+    connection.query("SELECT * FROM products WHERE productID =" + thisOne, function(err, res) {
+        if(err) throw err;
+        var data = [
+            ['id', 'ProductName','Quantity', 'Price']
+        ];
+        for(var i =0; i<res.length;i++){        
+            data.push([res[i].productID, res[i].productName, res[i].quantityOnHand, res[i].price]);            
+        }    
+        console.log();    
+        console.log(table(data));
+
+        inquirer.prompt({
+            name: "receiveQty",
+            type: "input",
+            message: "How much inventory would you like to recieve?"
+        })
+        .then(function(qunatity){
+            var qty = qunatity.receiveQty;
+            var newQty = res[0].quantityOnHand + Number(qty); 
+            connection.query("UPDATE products SET quantityOnHand =" + newQty + " WHERE productID=" + thisOne + ";", function(err, resUpdate) {
+                if (err) throw err;
+                connection.query("SELECT * FROM products WHERE productID =" + thisOne, function(err, res) {
+                    if(err) throw err;
+                    var data = [
+                        ['id', 'ProductName','Quantity', 'Price']
+                    ];
+                    for(var i =0; i<res.length;i++){        
+                        data.push([res[i].productID, res[i].productName, res[i].quantityOnHand, res[i].price]);            
+                    }    
+                    console.log();
+                    console.log(qty + ") " + res[0].productName + "('s) have been received.");
+                    console.log();
+                    console.log(table(data));
+                    goToStart();
+                })
+            })
+        })
+    });
 };
 
 function addProduct(){
@@ -140,10 +196,7 @@ function whichOption(){
                 console.log("4");
             break;
         };
-        
     })
-    
-
 };
 
 
